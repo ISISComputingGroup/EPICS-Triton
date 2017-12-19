@@ -32,3 +32,21 @@ getD {
     out "READ:DEV:%(\$1)s:TEMP:LOOP:D";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:D:%f";
 }
+
+setTSetpoint {
+    out "SET:DEV:%(\$1)s:TEMP:LOOP:TSET:%f";
+}
+
+getTSetpoint {
+    out "READ:DEV:%(\$1)s:TEMP:LOOP:TSET";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:TSET:%fK";
+}
+
+setHeaterRange {
+    out "SET:DEV:%(\$1)s:TEMP:LOOP:RANGE:%f";
+}
+
+getHeaterRange {
+    out "READ:DEV:%(\$1)s:TEMP:LOOP:RANGE";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:RANGE:%f";
+}
