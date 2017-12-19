@@ -1,10 +1,34 @@
-Terminator = CR LF;
+InTerminator = CR LF;
+OutTerminator = CR LF;
 
 getMixChamberUid {
     out "READ:SYS:DR:CHAN:MC";
-	in "STAT:SYS:DR:CHAN:MC:%39c";
+	in "STAT:SYS:DR:CHAN:MC:%s";
 }
 
 setP {
-    out "SET:DEV:\$1:TEMP:LOOP:P:%f";
+    out "SET:DEV:%(\$1)s:TEMP:LOOP:P:%f";
+}
+
+getP {
+    out "READ:DEV:%(\$1)s:TEMP:LOOP:P";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:P:%f";
+}
+
+setI {
+    out "SET:DEV:%(\$1)s:TEMP:LOOP:I:%f";
+}
+
+getI {
+    out "READ:DEV:%(\$1)s:TEMP:LOOP:I";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:I:%f";
+}
+
+setD {
+    out "SET:DEV:%(\$1)s:TEMP:LOOP:D:%f";
+}
+
+getD {
+    out "READ:DEV:%(\$1)s:TEMP:LOOP:D";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:D:%f";
 }
