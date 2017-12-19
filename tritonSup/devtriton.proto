@@ -66,3 +66,8 @@ getHtrPower {
     out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:SIG:POWR";
 	in "STAT:DEV:%*[^:]:HTR:SIG:POWR:%f%(\$1HEATER:POWER.EGU)s";
 }
+
+getClosedLoop {
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:MODE";
+	in "STAT:DEV:%*[^:]:TEMP:LOOP:MODE:%{OFF|ON}";
+}
