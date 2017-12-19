@@ -1,52 +1,68 @@
 InTerminator = CR LF;
 OutTerminator = CR LF;
 
+#
+# Throughout this file, if protocol entries require an argument it will always be the device prefix $(P)
+#
+# PVs have to be hardcoded in this file as there is a length limit on input links which gets exceeded
+#
+
 getMixChamberUid {
     out "READ:SYS:DR:CHAN:MC";
 	in "STAT:SYS:DR:CHAN:MC:%s";
 }
 
 setP {
-    out "SET:DEV:%(\$1)s:TEMP:LOOP:P:%f";
+    out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:P:%f";
 }
 
 getP {
-    out "READ:DEV:%(\$1)s:TEMP:LOOP:P";
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:P";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:P:%f";
 }
 
 setI {
-    out "SET:DEV:%(\$1)s:TEMP:LOOP:I:%f";
+    out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:I:%f";
 }
 
 getI {
-    out "READ:DEV:%(\$1)s:TEMP:LOOP:I";
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:I";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:I:%f";
 }
 
 setD {
-    out "SET:DEV:%(\$1)s:TEMP:LOOP:D:%f";
+    out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:D:%f";
 }
 
 getD {
-    out "READ:DEV:%(\$1)s:TEMP:LOOP:D";
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:D";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:D:%f";
 }
 
 setTSetpoint {
-    out "SET:DEV:%(\$1)s:TEMP:LOOP:TSET:%f";
+   out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:TSET:%f";
 }
 
 getTSetpoint {
-    out "READ:DEV:%(\$1)s:TEMP:LOOP:TSET";
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:TSET";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:TSET:%fK";
 }
 
-setHeaterRange {
-    out "SET:DEV:%(\$1)s:TEMP:LOOP:RANGE:%f";
+setHtrRange {
+   out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:RANGE:%f";
 }
 
-getHeaterRange {
-    out "READ:DEV:%(\$1)s:TEMP:LOOP:RANGE";
+getHtrRange {
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:RANGE";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:RANGE:%f";
+}
+
+getHtrType {
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:HTR";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:HTR:%s";
+}
+
+getHtrPower {
+    out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:SIG:POWR";
+	in "STAT:DEV:%*[^:]:HTR:SIG:POWR:%f%(\$1HEATER:POWER.EGU)s";
 }
