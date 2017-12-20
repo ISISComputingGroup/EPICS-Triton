@@ -71,3 +71,9 @@ getClosedLoop {
     out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:MODE";
 	in "STAT:DEV:%*[^:]:TEMP:LOOP:MODE:%{OFF|ON}";
 }
+
+getValveState {
+    # Argument 1 = Valve number
+    out "READ:DEV:V\$1:VALV:SIG:STATE";
+    in "STAT:DEV:V%*i:VALV:SIG:STATE:%{OPEN|CLOSE|NOT_FOUND}";
+}
