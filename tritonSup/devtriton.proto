@@ -77,3 +77,14 @@ getValveState {
     out "READ:DEV:V\$1:VALV:SIG:STATE";
     in "STAT:DEV:V%*i:VALV:SIG:STATE:%{OPEN|CLOSE|NOT_FOUND}";
 }
+
+getChanState {
+    # Argument 1 = Channel number
+	out "READ:DEV:T\$1:TEMP:MEAS:ENAB";
+	in "STAT:DEV:T%*i:TEMP:MEAS:ENAB:%{OFF|ON}";
+}
+
+setChanState {
+    # Argument 1 = Channel number
+    out "SET:DEV:T\$1:TEMP:MEAS:ENAB:%{OFF|ON}";
+}
