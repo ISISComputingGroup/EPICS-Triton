@@ -88,3 +88,9 @@ setChanState {
     # Argument 1 = Channel number
     out "SET:DEV:T\$1:TEMP:MEAS:ENAB:%{OFF|ON}";
 }
+
+getStatus {
+    out "READ:SYS:DR:STATUS";
+	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
+	in "STAT:SYS:DR:STATUS:%512c";
+}
