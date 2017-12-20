@@ -94,3 +94,9 @@ getStatus {
 	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
 	in "STAT:SYS:DR:STATUS:%512c";
 }
+
+getAutomation {
+    out "READ:SYS:DR:ACTN";
+	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
+	in "STAT:SYS:DR:ACTN:%512c";
+}
