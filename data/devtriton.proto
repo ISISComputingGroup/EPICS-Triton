@@ -12,6 +12,21 @@ getMixChamberUid {
 	in "STAT:SYS:DR:CHAN:MC:%s";
 }
 
+getMcTemp {
+    out "READ:DEV:%(\$1MC:UID)s:TEMP:SIG:TEMP";
+	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%fK";
+}
+
+getStilUid {
+    out "READ:SYS:DR:CHAN:STIL";
+	in "STAT:SYS:DR:CHAN:STIL:%s";
+}
+
+getStilTemp {
+    out "READ:DEV:%(\$1STIL:UID)s:TEMP:SIG:TEMP";
+	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%fK";
+}
+
 setP {
     out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:P:%f";
 }
