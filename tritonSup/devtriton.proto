@@ -135,3 +135,8 @@ getJTHXTemp {
     out "READ:DEV:T2:TEMP:SIG:TEMP";
 	in "STAT:DEV:T2:TEMP:SIG:TEMP:%fK";
 } 
+
+getPressure {
+    out "READ:DEV:\$1:PRES:SIG:PRES";
+	in "STAT:DEV:\$1:PRES:SIG:PRES:%fmB";
+}
