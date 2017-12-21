@@ -1,4 +1,4 @@
-InTerminator = CR LF;
+InTerminator = LF;
 OutTerminator = CR LF;
 
 #
@@ -95,6 +95,10 @@ getHtrPower {
 getClosedLoop {
     out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:MODE";
 	in "STAT:DEV:%*[^:]:TEMP:LOOP:MODE:%{OFF|ON}";
+}
+
+setClosedLoop {
+    out "SET:DEV:%(\$1MC:UID)s:TEMP:LOOP:MODE:%{OFF|ON}";
 }
 
 getValveState {
