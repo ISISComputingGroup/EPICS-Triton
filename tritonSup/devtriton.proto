@@ -144,3 +144,10 @@ getPressure {
     out "READ:DEV:\$1:PRES:SIG:PRES";
 	in "STAT:DEV:\$1:PRES:SIG:PRES:%fmB";
 }
+
+arbitrary {
+    out "%(\$1ARBITRARY:SP)#s";
+	ExtraInput = Ignore;
+	ReplyTimeout = 100;
+	in "%(\$1ARBITRARY)#512s";
+}
