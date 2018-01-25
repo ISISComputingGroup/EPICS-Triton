@@ -7,34 +7,23 @@ OutTerminator = CR LF;
 # PVs have to be hardcoded in this file as there is a length limit on input links which gets exceeded
 #
 
-getMCUid {
-    out "READ:SYS:DR:CHAN:MC";
-	in "STAT:SYS:DR:CHAN:MC:%s";
+getChanUid {
+    out "READ:SYS:DR:CHAN:\$1";
+	in "STAT:SYS:DR:CHAN:\$1:%s";
 }
 
-getMCTemp {
-    out "READ:DEV:%(\$1MC:UID)s:TEMP:SIG:TEMP";
+getSampleUid {
+    out "READ:DEV:H1:HTR:LOOP";
+	in "STAT:DEV:H1:HTR:LOOP:SENS:%s";
+}
+
+getChanTemp {
+    out "READ:DEV:%(\$1)s:TEMP:SIG:TEMP";
 	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%fK";
-}
-
-getSTILUid {
-    out "READ:SYS:DR:CHAN:STIL";
-	in "STAT:SYS:DR:CHAN:STIL:%s";
-}
-
-getSTILTemp {
-    out "READ:DEV:%(\$1STIL:UID)s:TEMP:SIG:TEMP";
-	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%fK";
-}
-
-getSORBUid {
-    out "READ:SYS:DR:CHAN:SORB";
-	in "STAT:SYS:DR:CHAN:SORB:%s";
-}
-
-getSORBTemp {
-    out "READ:DEV:%(\$1SORB:UID)s:TEMP:SIG:TEMP";
-	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%fK";
+	@mismatch {
+	    # If temperature was not found.
+	    in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:NOT_FOUND";
+	}
 }
 
 setP {
@@ -79,7 +68,7 @@ setHtrRange {
 
 getHtrRange {
     out "READ:DEV:%(\$1MC:UID)s:TEMP:LOOP:RANGE";
-    in "STAT:DEV:%*[^:]:TEMP:LOOP:RANGE:%f";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:RANGE:%fmA";
 }
 
 getHtrType {
@@ -130,16 +119,6 @@ getAutomation {
 	in "STAT:SYS:DR:ACTN:%512c";
 }
 
-get4KHXTemp {
-    out "READ:DEV:T3:TEMP:SIG:TEMP";
-	in "STAT:DEV:T3:TEMP:SIG:TEMP:%fK";
-}
-
-getJTHXTemp {
-    out "READ:DEV:T2:TEMP:SIG:TEMP";
-	in "STAT:DEV:T2:TEMP:SIG:TEMP:%fK";
-} 
-
 getPressure {
     out "READ:DEV:\$1:PRES:SIG:PRES";
 	in "STAT:DEV:\$1:PRES:SIG:PRES:%fmB";
@@ -150,4 +129,15 @@ arbitrary {
 	ExtraInput = Ignore;
 	ReplyTimeout = 100;
 	in "%(\$1ARBITRARY)#512s";
+}
+
+getTime {
+    out "READ:SYS:TIME";
+	in "STAT:SYS:TIME:%s";
+}
+
+getIDN {
+    out "*IDN?";
+	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
+	in "%512c";
 }
