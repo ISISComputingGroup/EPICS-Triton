@@ -111,14 +111,13 @@ getValveState {
 }
 
 getChanState {
-    # Argument 1 = Channel number
-	out "READ:DEV:T\$1:TEMP:MEAS:ENAB";
-	in "STAT:DEV:T%*i:TEMP:MEAS:ENAB:%{OFF|ON}";
+	out "READ:DEV:\$1:TEMP:MEAS:ENAB";
+	in "STAT:DEV:%*[^:]:TEMP:MEAS:ENAB:%{OFF|ON}";
 }
 
 setChanState {
-    # Argument 1 = Channel number
-    out "SET:DEV:T\$1:TEMP:MEAS:ENAB:%{OFF|ON}";
+    out "SET:DEV:\$1:TEMP:MEAS:ENAB:%{OFF|ON}";
+	in "%*s";
 }
 
 getStatus {
@@ -135,7 +134,7 @@ getAutomation {
 
 getPressure {
     out "READ:DEV:\$1:PRES:SIG:PRES";
-	in "STAT:DEV:\$1:PRES:SIG:PRES:%fmB";
+	in "STAT:DEV:%*[^:]:PRES:SIG:PRES:%fmB";
 }
 
 arbitrary {
@@ -156,4 +155,19 @@ getIDN {
     out "*IDN?";
 	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
 	in "%512c";
+}
+
+readSig {
+    out "READ:DEV:\$1:TEMP:SIG";
+	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%(\$2:TEMP)fK:RES:%(\$2:RES)f%(\$2:RES.EGU)s";
+}
+
+readExcitation {
+    out "READ:DEV:\$1:TEMP:EXCT";
+    in "STAT:DEV:%*[^:]:TEMP:EXCT:TYPE:%(\$2:EXCITATION:TYPE)[^:]:MAG:%(\$2:EXCITATION)f%(\$2:EXCITATION.EGU)s";
+}
+
+readMeas {
+    out "READ:DEV:\$1:TEMP:MEAS";
+    in "STAT:DEV:%*[^:]:TEMP:MEAS:PAUS:%(\$2:PAUSE)fs:DWEL:%(\$2:DWELL)fs:ENAB:%*[^:]";
 }
