@@ -159,7 +159,7 @@ getIDN {
 
 readSig {
     out "READ:DEV:\$1:TEMP:SIG";
-	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%(\$2:TEMP)fK:RES:%(\$2:RES)f%(\$2:RES.EGU)s";
+	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%(\$2:TEMP)fK:RES:%(\$2:RES)fOhm";
 }
 
 readExcitation {
