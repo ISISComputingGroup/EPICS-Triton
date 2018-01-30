@@ -101,7 +101,7 @@ getClosedLoop {
 
 setClosedLoop {
     out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:MODE:%{OFF|ON}";
-	in "%*s";
+	in "STAT:SET:DEV:%*[^:]:TEMP:LOOP:MODE:%*{OFF|ON}:VALID";
 }
 
 getValveState {
