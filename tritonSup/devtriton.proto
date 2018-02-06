@@ -91,7 +91,14 @@ getHtrType {
 
 getHtrPower {
     out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:SIG:POWR";
-	in "STAT:DEV:%*[^:]:HTR:SIG:POWR:%f%(\$1HEATER:POWER.EGU)s";
+	# ASSUMPTION - always returns heater power in uW.
+	in "STAT:DEV:%*[^:]:HTR:SIG:POWR:%fuW";
+}
+
+getHtrCurr {
+    out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:SIG:CURR";
+	# ASSUMPTION - always returns heater current in mA.
+	in "STAT:DEV:%*[^:]:HTR:SIG:CURR:%fmA";
 }
 
 getClosedLoop {
