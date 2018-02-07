@@ -95,10 +95,10 @@ getHtrPower {
 	in "STAT:DEV:%*[^:]:HTR:SIG:POWR:%fuW";
 }
 
-getHtrCurr {
-    out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:SIG:CURR";
-	# ASSUMPTION - always returns heater current in mA.
-	in "STAT:DEV:%*[^:]:HTR:SIG:CURR:%fmA";
+getHtrRes {
+    out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:RES";
+	# ASSUMPTION - always returns heater resistance in Ohms.
+	in "STAT:DEV:%*[^:]:HTR:RES:%fOhm";
 }
 
 getClosedLoop {
