@@ -1,0 +1,180 @@
+InTerminator = LF;
+OutTerminator = CR LF;
+
+# Some commands take a (very) long time to reply.
+# This is particularly noticeable for setting closed loop mode, for example.
+ReplyTimeout = 20000;
+ReadTimeout = 20000;
+WriteTimeout = 20000;
+
+# Have to increase the lock timeout because if a command takes a very long time to reply it will 
+# still hold the exclusive lock for the comms port, so other commands cannot use it.
+LockTimeout = 30000;
+
+#
+# Throughout this file PVs often have to be hardcoded as there is a length limit on input links which gets exceeded
+#
+
+getChanUid {
+    out "READ:SYS:DR:CHAN:\$1";
+	in "STAT:SYS:DR:CHAN:\$1:%s";
+}
+
+getSampleUid {
+    out "READ:DEV:H1:HTR:LOOP";
+	in "STAT:DEV:H1:HTR:LOOP:SENS:%s";
+}
+
+getChanTemp {
+    out "READ:DEV:%(\$1)s:TEMP:SIG:TEMP";
+	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%fK";
+	@mismatch {
+	    # If temperature was not found.
+	    in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:NOT_FOUND";
+	}
+}
+
+setP {
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:P:%f";
+	in "%*s";
+}
+
+getP {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:P";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:P:%f";
+}
+
+setI {
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:I:%f";
+	in "%*s";
+}
+
+getI {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:I";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:I:%f";
+}
+
+setD {
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:D:%f";
+	in "%*s";
+}
+
+getD {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:D";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:D:%f";
+}
+
+setTSetpoint {
+   out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:TSET:%f";
+   in "%*s";
+}
+
+getTSetpoint {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:TSET";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:TSET:%fK";
+}
+
+setHtrRange {
+   out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:RANGE:%f";
+   in "%*s";
+}
+
+getHtrRange {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:RANGE";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:RANGE:%fmA";
+}
+
+getHtrType {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:HTR";
+    in "STAT:DEV:%*[^:]:TEMP:LOOP:HTR:%s";
+}
+
+getHtrPower {
+    out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:SIG:POWR";
+	# ASSUMPTION - always returns heater power in uW.
+	in "STAT:DEV:%*[^:]:HTR:SIG:POWR:%fuW";
+}
+
+getHtrRes {
+    out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:RES";
+	# ASSUMPTION - always returns heater resistance in Ohms.
+	in "STAT:DEV:%*[^:]:HTR:RES:%fOhm";
+}
+
+getClosedLoop {
+    out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:MODE";
+	in "STAT:DEV:%*[^:]:TEMP:LOOP:MODE:%{OFF|ON}";
+}
+
+setClosedLoop {
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:MODE:%{OFF|ON}";
+	in "STAT:SET:DEV:%*[^:]:TEMP:LOOP:MODE:%*{OFF|ON}:VALID";
+}
+
+getValveState {
+    # Argument 1 = Valve number
+    out "READ:DEV:V\$1:VALV:SIG:STATE";
+    in "STAT:DEV:V%*i:VALV:SIG:STATE:%{OPEN|CLOSE|NOT_FOUND}";
+}
+
+getChanState {
+	out "READ:DEV:\$1:TEMP:MEAS:ENAB";
+	in "STAT:DEV:%*[^:]:TEMP:MEAS:ENAB:%{OFF|ON}";
+}
+
+setChanState {
+    out "SET:DEV:\$1:TEMP:MEAS:ENAB:%{OFF|ON}";
+	in "%*s";
+}
+
+getStatus {
+    out "READ:SYS:DR:STATUS";
+	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
+	in "STAT:SYS:DR:STATUS:%512c";
+}
+
+getAutomation {
+    out "READ:SYS:DR:ACTN";
+	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
+	in "STAT:SYS:DR:ACTN:%512c";
+}
+
+getPressure {
+    out "READ:DEV:\$1:PRES:SIG:PRES";
+	in "STAT:DEV:%*[^:]:PRES:SIG:PRES:%fmB";
+}
+
+arbitrary {
+    out "%(\$1ARBITRARY:SP)#s";
+	ExtraInput = Ignore;
+	# Will always get a reply of some sort to a correct command.
+	# Need to wait for the reply to arrive as some commands take a long time to process.
+	# If we don't wait for the reply our reads and writes get out of sync which causes issues.
+	in "%(\$1ARBITRARY)#512s";
+}
+
+getTime {
+    out "READ:SYS:TIME";
+	in "STAT:SYS:TIME:%s";
+}
+
+getIDN {
+    out "*IDN?";
+	ExtraInput = Ignore;  # If we get more than 512 chars in response, discard the excess and do not throw an error.
+	in "%512c";
+}
+
+readSig {
+    out "READ:DEV:\$1:TEMP:SIG";
+	in "STAT:DEV:%*[^:]:TEMP:SIG:TEMP:%(\$2:TEMP)fK:RES:%(\$2:RES)fOhm";
+}
+
+readExcitation {
+    out "READ:DEV:\$1:TEMP:EXCT";
+    in "STAT:DEV:%*[^:]:TEMP:EXCT:TYPE:%(\$2:EXCITATION:TYPE)[^:]:MAG:%(\$2:EXCITATION)f%(\$2:EXCITATION.EGU)s";
+}
+
+readMeas {
+    out "READ:DEV:\$1:TEMP:MEAS";
+    in "STAT:DEV:%*[^:]:TEMP:MEAS:PAUS:%(\$2:PAUSE)fs:DWEL:%(\$2:DWELL)fs:ENAB:%*[^:]";
+}
