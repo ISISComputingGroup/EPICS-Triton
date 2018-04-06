@@ -111,12 +111,6 @@ setClosedLoop {
 	in "STAT:SET:DEV:%*[^:]:TEMP:LOOP:MODE:%*{OFF|ON}:VALID";
 }
 
-getValveState {
-    # Argument 1 = Valve number
-    out "READ:DEV:V\$1:VALV:SIG:STATE";
-    in "STAT:DEV:V%*i:VALV:SIG:STATE:%{OPEN|CLOSE|NOT_FOUND}";
-}
-
 getChanState {
 	out "READ:DEV:\$1:TEMP:MEAS:ENAB";
 	in "STAT:DEV:%*[^:]:TEMP:MEAS:ENAB:%{OFF|ON}";
