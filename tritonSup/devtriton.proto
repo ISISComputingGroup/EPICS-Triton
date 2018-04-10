@@ -98,7 +98,7 @@ getHtrPower {
 getHtrRes {
     out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:RES";
 	# ASSUMPTION - always returns heater resistance in Ohms.
-	in "STAT:DEV:%*[^:]:HTR:RES:%fOhm";
+	in "STAT:DEV:%*[^:]:HTR:RES:%f*{Ohm|}";
 }
 
 getClosedLoop {
