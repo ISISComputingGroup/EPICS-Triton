@@ -98,7 +98,7 @@ getHtrPower {
 getHtrRes {
     out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:RES";
 	# ASSUMPTION - always returns heater resistance in Ohms.
-	in "STAT:DEV:%*[^:]:HTR:RES:%fOhm";
+	in "STAT:DEV:%*[^:]:HTR:RES:%f*{Ohm|}";
 }
 
 getClosedLoop {
@@ -109,12 +109,6 @@ getClosedLoop {
 setClosedLoop {
     out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:MODE:%{OFF|ON}";
 	in "STAT:SET:DEV:%*[^:]:TEMP:LOOP:MODE:%*{OFF|ON}:VALID";
-}
-
-getValveState {
-    # Argument 1 = Valve number
-    out "READ:DEV:V\$1:VALV:SIG:STATE";
-    in "STAT:DEV:V%*i:VALV:SIG:STATE:%{OPEN|CLOSE|NOT_FOUND}";
 }
 
 getChanState {
