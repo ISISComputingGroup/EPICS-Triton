@@ -70,6 +70,12 @@ setTSetpoint {
 }
 
 setLoopThenTSetpoint {
+
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:TSET:%f";
+    in "%*s";
+    
+    wait 500;
+
     out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:MODE:ON";
 	in "STAT:SET:DEV:%*[^:]:TEMP:LOOP:MODE:ON:VALID";
     
