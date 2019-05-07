@@ -69,6 +69,22 @@ setTSetpoint {
    in "%*s";
 }
 
+setLoopThenTSetpoint {
+
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:TSET:%f";
+    in "%*s";
+    
+    wait 500;
+
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:MODE:ON";
+	in "STAT:SET:DEV:%*[^:]:TEMP:LOOP:MODE:ON:VALID";
+    
+    wait 500;  # To be extra safe and ensure that closed loop has really switched on fully - shouldn't be necessary in theory.
+    
+    out "SET:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:TSET:%f";
+    in "%*s";
+}
+
 getTSetpoint {
     out "READ:DEV:%(\$1SAMPLE:UID)s:TEMP:LOOP:TSET";
     in "STAT:DEV:%*[^:]:TEMP:LOOP:TSET:%fK";
@@ -98,7 +114,7 @@ getHtrPower {
 getHtrRes {
     out "READ:DEV:%(\$1HEATER:TYPE)s:HTR:RES";
 	# ASSUMPTION - always returns heater resistance in Ohms.
-	in "STAT:DEV:%*[^:]:HTR:RES:%f*{Ohm|}";
+	in "STAT:DEV:%*[^:]:HTR:RES:%f%*{Ohm|}";
 }
 
 getClosedLoop {
