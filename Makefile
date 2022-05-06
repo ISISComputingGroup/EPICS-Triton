@@ -12,3 +12,6 @@ DIRS += $(wildcard *[Aa]pp)
 DIRS += $(wildcard ioc[Bb]oot)
 
 include $(TOP)/configure/RULES_TOP
+
+ioctests:
+	.\system_tests\run_tests.bat
